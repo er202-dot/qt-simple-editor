@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/replace.png</file>
+        <file>icons/editoricon_bg_colors.png</file>
+        <file>icons/wrap.png</file>
+        <file>icons/showlinenum.png</file>
+        <file>icons/fontbgcolor.png</file>
+        <file>icons/fontcolor.png</file>
+        <file>icons/statuscolor.png</file>
+        <file>icons/font.png</file>
+    </qresource>
+</RCC>
