@@ -2,6 +2,7 @@
 #include "./ui_mainwindow.h"
 #include "about.h"
 #include "find.h"
+#include "replace.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,6 +38,13 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionFind_triggered()
 {
     class find dlg;
+    dlg.exec();
+}
+
+
+void MainWindow::on_actionReplace_triggered()
+{
+    replace dlg;
     dlg.exec();
 }
 
