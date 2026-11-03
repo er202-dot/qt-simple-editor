@@ -18,6 +18,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+private slots:
+    void on_actionAbout_triggered();
+
+    void on_actionFind_triggered();
+
 private:
     Ui::MainWindow *ui;
 

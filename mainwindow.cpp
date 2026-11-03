@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "about.h"
+#include "find.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,3 +26,17 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_actionAbout_triggered()
+{
+    about dlg;
+    dlg.exec();
+}
+
+
+void MainWindow::on_actionFind_triggered()
+{
+    class find dlg;
+    dlg.exec();
+}
+

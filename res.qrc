@@ -8,5 +8,6 @@
         <file>icons/fontcolor.png</file>
         <file>icons/statuscolor.png</file>
         <file>icons/font.png</file>
+        <file>icons/editor.png</file>
     </qresource>
 </RCC>
