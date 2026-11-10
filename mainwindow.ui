@@ -31,7 +31,7 @@
      <number>1</number>
     </property>
     <item>
-     <widget class="QPlainTextEdit" name="textEdit"/>
+     <widget class="QPlainTextEdit" name="plainTextEdit"/>
     </item>
    </layout>
   </widget>
@@ -59,11 +59,11 @@
     <property name="title">
      <string>编辑(&amp;E)</string>
     </property>
-    <addaction name="actionRevert"/>
+    <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
-    <addaction name="action"/>
+    <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
     <addaction name="actionReplace"/>
@@ -117,10 +117,10 @@
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
    <addaction name="separator"/>
-   <addaction name="actionRevert"/>
+   <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
    <addaction name="actionCut"/>
-   <addaction name="action"/>
+   <addaction name="actionPaste"/>
    <addaction name="actionCopy"/>
    <addaction name="separator"/>
    <addaction name="actionFind"/>
@@ -206,7 +206,7 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionRevert">
+  <action name="actionUndo">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentRevert"/>
    </property>
@@ -248,7 +248,7 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="action">
+  <action name="actionPaste">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::EditPaste"/>
    </property>

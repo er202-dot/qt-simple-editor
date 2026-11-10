@@ -34,9 +34,31 @@ MainWindow::MainWindow(QWidget *parent)
     currentFilePath = "";
     isModified = false;
 
-    connect(ui->textEdit, &QPlainTextEdit::textChanged, this, [=](){
+    connect(ui->plainTextEdit, &QPlainTextEdit::textChanged, this, [=](){
         isModified = true;
     });
+
+    m_clipboard = QApplication::clipboard();
+    // ========= 绑定QPlainTextEdit自带信号，刷新按钮状态 =========
+    // 选中文字变化 → 控制剪切、复制
+    connect(ui->plainTextEdit, &QPlainTextEdit::copyAvailable,
+            this, &MainWindow::updateCutCopyState);
+    // 可撤销状态变化 → 撤销按钮
+    connect(ui->plainTextEdit, &QPlainTextEdit::undoAvailable,
+            this, &MainWindow::updateUndoState);
+    // 可恢复状态变化 → 恢复按钮
+    connect(ui->plainTextEdit, &QPlainTextEdit::redoAvailable,
+            this, &MainWindow::updateRedoState);
+    // 剪贴板内容变化 → 刷新粘贴按钮
+    connect(m_clipboard, &QClipboard::dataChanged,
+            this, &MainWindow::updatePasteState);
+
+    // 【初始化界面：一开始全部符合要求，灰色】
+    ui->actionCut->setEnabled(false);
+    ui->actionCopy->setEnabled(false);
+    ui->actionPaste->setEnabled(false);
+    ui->actionUndo->setEnabled(false);
+    ui->actionRedo->setEnabled(false);
 
 }
 
@@ -106,7 +128,7 @@ void MainWindow::on_actionNew_triggered()
     {
         return;
     }
-    ui->textEdit->clear();
+    ui->plainTextEdit->clear();
     currentFilePath = "";
     isModified = false;
     this->setWindowTitle("Simple文本编辑器 - 新建文档");
@@ -136,7 +158,7 @@ void MainWindow::on_actionOpen_triggered()
     QTextStream in(&file);
     in.setEncoding(QStringConverter::Utf8);
     QString content = in.readAll();
-    ui->textEdit->setPlainText(content);
+    ui->plainTextEdit->setPlainText(content);
     file.close();
 
     currentFilePath = path;
@@ -160,7 +182,7 @@ void MainWindow::on_actionSave_triggered()
     }
     QTextStream out(&file);
     out.setEncoding(QStringConverter::Utf8);
-    out << ui->textEdit->toPlainText();
+    out << ui->plainTextEdit->toPlainText();
     file.close();
     isModified = false;
     QMessageBox::information(this, tr("提示"), tr("保存成功！"));
@@ -183,7 +205,7 @@ void MainWindow::on_actionSaveAs_triggered(bool fromSave)
     }
     QTextStream out(&file);
     out.setEncoding(QStringConverter::Utf8);
-    out << ui->textEdit->toPlainText();
+    out << ui->plainTextEdit->toPlainText();
     file.close();
 
     currentFilePath = path;
@@ -198,3 +220,66 @@ void MainWindow::on_actionSaveAs_triggered(bool fromSave)
         QMessageBox::information(this, tr("提示"), tr("另存成功！"));
     }
 }
+
+void MainWindow::on_actionCut_triggered()
+{
+    ui->plainTextEdit->cut();
+}
+
+
+void MainWindow::on_actionCopy_triggered()
+{
+    ui->plainTextEdit->copy();
+}
+
+
+void MainWindow::on_actionPaste_triggered()
+{
+    ui->plainTextEdit->paste();
+}
+
+
+void MainWindow::on_actionRedo_triggered()
+{
+    ui->plainTextEdit->redo();
+}
+
+
+void MainWindow::on_actionUndo_triggered()
+{
+    ui->plainTextEdit->undo();
+}
+
+
+void MainWindow::on_actionSelectAll_triggered()
+{
+    ui->plainTextEdit->selectAll();
+}
+
+// 剪切、复制按钮：hasSelect=true 有选中文字，可用
+void MainWindow::updateCutCopyState(bool hasSelect)
+{
+    ui->actionCut->setEnabled(hasSelect);
+    ui->actionCopy->setEnabled(hasSelect);
+}
+
+// 撤销按钮
+void MainWindow::updateUndoState(bool canUndo)
+{
+    ui->actionUndo->setEnabled(canUndo);
+}
+
+// 恢复按钮
+void MainWindow::updateRedoState(bool canRedo)
+{
+    ui->actionRedo->setEnabled(canRedo);
+}
+
+// 粘贴按钮：判断剪贴板有没有文本内容
+void MainWindow::updatePasteState()
+{
+    bool hasText = !m_clipboard->text().isEmpty();
+    ui->actionPaste->setEnabled(hasText);
+}
+
+

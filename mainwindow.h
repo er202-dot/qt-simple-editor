@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QCloseEvent>
+#include <QClipboard>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -31,12 +32,34 @@ private slots:
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered(bool fromSave = false);
 
+    void on_actionCut_triggered();
+
+    void on_actionCopy_triggered();
+
+    void on_actionRedo_triggered();
+
+    void on_actionSelectAll_triggered();
+
+    // ========== 状态刷新槽函数（用来控制按钮灰亮） ==========
+    void updateCutCopyState(bool hasSelect);
+    void updateUndoState(bool canUndo);
+    void updateRedoState(bool canRedo);
+    void updatePasteState();
+
+
+    void on_actionUndo_triggered();
+
+    void on_actionPaste_triggered();
+
 private:
     Ui::MainWindow *ui;
 
     QLabel statusCursorLabel;
     QLabel statusLabel;
     QString currentFilePath;
+
+    QClipboard *m_clipboard;
+
     bool isModified;
 
     bool maybeSave();
