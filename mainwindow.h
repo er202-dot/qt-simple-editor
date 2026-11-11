@@ -77,6 +77,7 @@ private slots:
     void on_actionStatusbar_triggered(bool checked);
 
     void on_actionExit_triggered();
+    void doFindText(QString target, bool caseSensitive, bool searchUp);
 
 private:
     Ui::MainWindow *ui;
@@ -91,5 +92,7 @@ private:
 
     bool maybeSave();
     LineNumberArea *m_lineArea;
+
+    QTextCursor m_searchCursor; // 记录查找光标，连续查找用
 };
 #endif // MAINWINDOW_H

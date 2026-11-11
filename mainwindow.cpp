@@ -15,7 +15,7 @@
 #include <QColorDialog>
 #include <QTextCharFormat>
 #include <QTextCursor>
-
+#include <QTextDocument>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -126,10 +126,13 @@ void MainWindow::on_actionAbout_triggered()
     dlg.exec();
 }
 
-void MainWindow::on_actionFind_triggered()
+    void MainWindow::on_actionFind_triggered()
 {
-    class find dlg;
-    dlg.exec();
+    Find *dlg = new Find(this);
+    // 连接对话框的查找信号，绑定到我们自己的查找处理函数
+    connect(dlg, &Find::sendFindInfo, this, &MainWindow::doFindText);
+    dlg->setAttribute(Qt::WA_DeleteOnClose); // 关闭自动释放
+    dlg->exec();
 }
 
 void MainWindow::on_actionReplace_triggered()
@@ -399,3 +402,38 @@ void MainWindow::on_actionExit_triggered()
     this->close();
 }
 
+void MainWindow::doFindText(QString target, bool caseSensitive, bool searchUp)
+{
+    if(target.isEmpty())
+    {
+        QMessageBox::information(this, "提示", "请输入查找目标！");
+        return;
+    }
+
+    QTextDocument::FindFlags flag;
+    if(caseSensitive)
+        flag |= QTextDocument::FindCaseSensitively;
+    if(searchUp)
+        flag |= QTextDocument::FindBackward;
+
+    // 第一次查找：光标从当前编辑器光标位置开始
+    if(!m_searchCursor.isNull())
+    {
+        ui->plainTextEdit->setTextCursor(m_searchCursor);
+    }
+
+    bool found = ui->plainTextEdit->find(target, flag);
+
+    if(found)
+    {
+        // 找到：自动选中文字，保存当前光标，下次接着搜
+        m_searchCursor = ui->plainTextEdit->textCursor();
+    }
+    else
+    {
+        // 没找到，弹窗提示
+        QMessageBox::information(this, "提示", "未找到匹配内容！");
+        // 查找失败，重置光标，下次从头开始
+        m_searchCursor = QTextCursor();
+    }
+}
