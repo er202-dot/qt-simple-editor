@@ -137,9 +137,14 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionReplace_triggered()
 {
-    class replace dlg;
-    dlg.exec();
+    Replace *dlg = new Replace(this);
+    connect(dlg, &Replace::sendFind, this, &MainWindow::doFindText);
+    connect(dlg, &Replace::sendReplace, this, &MainWindow::doReplace);
+    connect(dlg, &Replace::sendReplaceAll, this, &MainWindow::doReplaceAll);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    dlg->exec();
 }
+
 
 void MainWindow::on_actionNew_triggered()
 {
@@ -437,3 +442,59 @@ void MainWindow::doFindText(QString target, bool caseSensitive, bool searchUp)
         m_searchCursor = QTextCursor();
     }
 }
+void MainWindow::doReplace(QString target, QString replaceText, bool caseSensitive, bool searchUp)
+{
+    if(target.isEmpty())
+    {
+        QMessageBox::information(this, "提示", "请输入查找内容！");
+        return;
+    }
+    QTextCursor cur = ui->plainTextEdit->textCursor();
+    // 判断：当前选中的文本是不是等于查找文本
+    QString selected = cur.selectedText();
+    QTextDocument::FindFlags flag;
+    if(caseSensitive) flag |= QTextDocument::FindCaseSensitively;
+
+    if( (caseSensitive && selected == target) || (!caseSensitive && selected.compare(target, Qt::CaseInsensitive) == 0) )
+    {
+        // 选中内容匹配，执行替换
+        cur.insertText(replaceText);
+        ui->plainTextEdit->setTextCursor(cur);
+        // 替换完，自动继续查找下一个（和记事本逻辑一致）
+        doFindText(target, caseSensitive, searchUp);
+    }
+    else
+    {
+        QMessageBox::information(this, "提示", "请先查找并选中匹配文字！");
+    }
+}
+void MainWindow::doReplaceAll(QString target, QString replaceText, bool caseSensitive)
+{
+    if(target.isEmpty())
+    {
+        QMessageBox::information(this, "提示", "请输入查找内容！");
+        return;
+    }
+    QTextDocument::FindFlags flag;
+    if(caseSensitive)
+        flag |= QTextDocument::FindCaseSensitively;
+
+    QTextDocument *doc = ui->plainTextEdit->document();
+    QTextCursor cursor(doc);
+    cursor.movePosition(QTextCursor::Start);
+    int count = 0;
+
+    // 重点：先接收返回的光标，用 isNull() 判断是否找到
+    QTextCursor findCursor = doc->find(target, cursor, flag);
+    while( !findCursor.isNull() )
+    {
+        findCursor.insertText(replaceText);
+        count++;
+        // 从下一个位置继续查找
+        findCursor = doc->find(target, findCursor, flag);
+    }
+
+    QMessageBox::information(this, "提示", QString("全部替换完成，一共替换 %1 处").arg(count));
+    m_searchCursor = QTextCursor();
+}
+

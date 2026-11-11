@@ -78,6 +78,8 @@ private slots:
 
     void on_actionExit_triggered();
     void doFindText(QString target, bool caseSensitive, bool searchUp);
+    void doReplace(QString target, QString replaceText, bool caseSensitive, bool searchUp);
+    void doReplaceAll(QString target, QString replaceText, bool caseSensitive);
 
 private:
     Ui::MainWindow *ui;
