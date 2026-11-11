@@ -80,6 +80,7 @@ private slots:
     void doFindText(QString target, bool caseSensitive, bool searchUp);
     void doReplace(QString target, QString replaceText, bool caseSensitive, bool searchUp);
     void doReplaceAll(QString target, QString replaceText, bool caseSensitive);
+    void updateStatusBarInfo();
 
 private:
     Ui::MainWindow *ui;

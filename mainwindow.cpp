@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->actionToolbar->setChecked(true);
     ui->actionStatusbar->setChecked(true);
+    connect(ui->plainTextEdit, &QPlainTextEdit::textChanged, this, &MainWindow::updateStatusBarInfo);
+    connect(ui->plainTextEdit, &QPlainTextEdit::cursorPositionChanged, this, &MainWindow::updateStatusBarInfo);
 
 }
 
@@ -496,5 +498,18 @@ void MainWindow::doReplaceAll(QString target, QString replaceText, bool caseSens
 
     QMessageBox::information(this, "提示", QString("全部替换完成，一共替换 %1 处").arg(count));
     m_searchCursor = QTextCursor();
+}
+void MainWindow::updateStatusBarInfo()
+{
+    QString allText = ui->plainTextEdit->toPlainText();
+    int len = allText.size();
+    int lineCount = ui->plainTextEdit->blockCount();
+
+    QTextCursor cur = ui->plainTextEdit->textCursor();
+    int lineNo = cur.blockNumber() + 1;    // 行从1开始
+    int colNo = cur.positionInBlock() + 1; // 列从1开始
+
+    statusLabel.setText(QString("length:%1  lines:%2").arg(len).arg(lineCount));
+    statusCursorLabel.setText(QString("Lh:%1  Col:%2").arg(lineNo).arg(colNo));
 }
 
