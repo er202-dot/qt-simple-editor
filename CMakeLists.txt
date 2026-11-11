@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         about.h about.cpp about.ui
         find.h find.cpp find.ui
         replace.h replace.cpp replace.ui
+        linenumberarea.h linenumberarea.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Editor APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

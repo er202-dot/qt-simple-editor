@@ -72,6 +72,12 @@ private slots:
 
     void on_actionTextWrap_triggered(bool checked);
 
+    void on_actionToolbar_triggered(bool checked);
+
+    void on_actionStatusbar_triggered(bool checked);
+
+    void on_actionExit_triggered();
+
 private:
     Ui::MainWindow *ui;
 

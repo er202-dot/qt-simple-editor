@@ -1,0 +1,42 @@
+# Qt 自动生成的用户配置、缓存文件
+*.pro.user
+*.pro.user.*
+*.qrc.bak
+*.ui.bak
+*.h.bak
+*.cpp.bak
+
+# 编译构建目录（重点！build 文件夹，不要上传）
+build-*/
+build/
+Build/
+
+# 编译产物、exe、临时文件
+*.o
+*.obj
+*.exe
+*.dll
+*.lib
+*.pdb
+*.so
+*.a
+*.out
+*.log
+
+# Qt Creator 本地配置文件夹
+.qt/
+.qtcreator/
+.qtcreator-cpp/
+
+# CMake 缓存（如果你现在是CMake项目，一定要加）
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+_autogen/
+
+# 其他杂项
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

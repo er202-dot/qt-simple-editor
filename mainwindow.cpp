@@ -73,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->plainTextEdit, &QPlainTextEdit::updateRequest, this, &MainWindow::updateLineNumberArea);
     updateLineNumberAreaWidth(0);
 
+    ui->actionToolbar->setChecked(true);
+    ui->actionStatusbar->setChecked(true);
 
 }
 
@@ -374,4 +376,26 @@ void MainWindow::on_actionShowLinenumber_triggered(bool checked)
     }
 }
 
+
+
+void MainWindow::on_actionToolbar_triggered(bool checked)
+{
+    // ui->toolBar 界面上工具栏的对象名
+    ui->toolBar->setVisible(checked);
+}
+
+
+void MainWindow::on_actionStatusbar_triggered(bool checked)
+{
+    // ui->statusbar 是Qt自带状态栏
+    ui->statusbar->setVisible(checked);
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+
+  // 直接调用窗口关闭，会自动触发closeEvent，不用重复写保存判断
+    this->close();
+}
 
