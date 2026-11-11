@@ -77,7 +77,7 @@
     <addaction name="actionTextWrap"/>
     <addaction name="actionShowLinenumber"/>
     <addaction name="actionFont"/>
-    <addaction name="actionColor"/>
+    <addaction name="actionFontColor"/>
     <addaction name="separator"/>
     <addaction name="actionBgColor"/>
     <addaction name="actionEdColor"/>
@@ -358,7 +358,7 @@
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="actionColor">
+  <action name="actionFontColor">
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/fontcolor.png</normaloff>:/icons/fontcolor.png</iconset>

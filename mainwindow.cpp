@@ -3,6 +3,7 @@
 #include "about.h"
 #include "find.h"
 #include "replace.h"
+#include "linenumberarea.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -10,6 +11,11 @@
 #include <QTextStream>
 #include <QStringConverter>
 #include <QPlainTextEdit>
+#include <QFontDialog>
+#include <QColorDialog>
+#include <QTextCharFormat>
+#include <QTextCursor>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -59,6 +65,14 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionPaste->setEnabled(false);
     ui->actionUndo->setEnabled(false);
     ui->actionRedo->setEnabled(false);
+
+    // 构造函数内
+    m_lineArea = new LineNumberArea(ui->plainTextEdit);
+    // 绑定信号，滚动、文本变化时刷新行号
+    connect(ui->plainTextEdit, &QPlainTextEdit::blockCountChanged, this, &MainWindow::updateLineNumberAreaWidth);
+    connect(ui->plainTextEdit, &QPlainTextEdit::updateRequest, this, &MainWindow::updateLineNumberArea);
+    updateLineNumberAreaWidth(0);
+
 
 }
 
@@ -225,32 +239,22 @@ void MainWindow::on_actionCut_triggered()
 {
     ui->plainTextEdit->cut();
 }
-
-
 void MainWindow::on_actionCopy_triggered()
 {
     ui->plainTextEdit->copy();
 }
-
-
 void MainWindow::on_actionPaste_triggered()
 {
     ui->plainTextEdit->paste();
 }
-
-
 void MainWindow::on_actionRedo_triggered()
 {
     ui->plainTextEdit->redo();
 }
-
-
 void MainWindow::on_actionUndo_triggered()
 {
     ui->plainTextEdit->undo();
 }
-
-
 void MainWindow::on_actionSelectAll_triggered()
 {
     ui->plainTextEdit->selectAll();
@@ -280,6 +284,94 @@ void MainWindow::updatePasteState()
 {
     bool hasText = !m_clipboard->text().isEmpty();
     ui->actionPaste->setEnabled(hasText);
+}
+
+
+
+void MainWindow::on_actionFont_triggered()
+{
+    // 获取当前选中的文本格式
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    QTextCharFormat fmt = cursor.charFormat();
+
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, fmt.font(), this, "选择字体");
+    if (ok)
+    {
+        fmt.setFont(font);
+        cursor.setCharFormat(fmt);
+        ui->plainTextEdit->setTextCursor(cursor);
+    }
+}
+
+
+void MainWindow::on_actionFontColor_triggered()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    QTextCharFormat fmt = cursor.charFormat();
+
+    QColor color = QColorDialog::getColor(fmt.foreground().color(), this, "选择字体颜色");
+    if(color.isValid())
+    {
+        fmt.setForeground(color);
+        cursor.setCharFormat(fmt);
+        ui->plainTextEdit->setTextCursor(cursor);
+    }
+}
+
+
+void MainWindow::on_actionBgColor_triggered()
+{
+    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    QTextCharFormat fmt = cursor.charFormat();
+
+    QColor color = QColorDialog::getColor(fmt.background().color(), this, "选择文字背景色");
+    if(color.isValid())
+    {
+        fmt.setBackground(color);
+        cursor.setCharFormat(fmt);
+        ui->plainTextEdit->setTextCursor(cursor);
+    }
+}
+
+
+void MainWindow::on_actionTextWrap_triggered(bool checked)
+{
+    if(checked)
+    {
+        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    }
+    else
+    {
+        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+    }
+}
+void MainWindow::updateLineNumberAreaWidth(int /*newBlockCount*/)
+{
+    int w = m_lineArea->areaWidth();
+    m_lineArea->setGeometry(0,0,w, ui->plainTextEdit->viewport()->height());
+}
+
+void MainWindow::updateLineNumberArea(const QRect &rect, int dy)
+{
+    if (dy)
+        m_lineArea->scroll(0, dy);
+    else
+        m_lineArea->update(0, rect.y(), m_lineArea->width(), rect.height());
+}
+
+
+void MainWindow::on_actionShowLinenumber_triggered(bool checked)
+{
+    if(checked)
+    {
+        m_lineArea->show();
+        updateLineNumberAreaWidth(0);
+    }
+    else
+    {
+        m_lineArea->hide();
+    }
 }
 
 

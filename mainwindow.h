@@ -1,10 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "linenumberarea.h"
+
 #include <QMainWindow>
 #include <QLabel>
 #include <QCloseEvent>
 #include <QClipboard>
+#include <QFontDialog>
+#include <QColorDialog>
+#include <QTextCharFormat>
+#include <QTextCursor>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -51,6 +58,20 @@ private slots:
 
     void on_actionPaste_triggered();
 
+    void on_actionFont_triggered();
+
+    void on_actionFontColor_triggered();
+
+    void on_actionBgColor_triggered();
+
+    // 同步行号区域宽度、重绘行号
+    void updateLineNumberAreaWidth(int newBlockCount);
+    void updateLineNumberArea(const QRect &rect, int dy);
+
+    void on_actionShowLinenumber_triggered(bool checked);
+
+    void on_actionTextWrap_triggered(bool checked);
+
 private:
     Ui::MainWindow *ui;
 
@@ -63,5 +84,6 @@ private:
     bool isModified;
 
     bool maybeSave();
+    LineNumberArea *m_lineArea;
 };
 #endif // MAINWINDOW_H
