@@ -344,6 +344,12 @@
    </property>
   </action>
   <action name="actionShowLinenumber">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/icons/showlinenum.png</normaloff>:/icons/showlinenum.png</iconset>

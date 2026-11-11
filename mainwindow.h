@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "linenumberarea.h"
+// #include "linenumberarea.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -65,8 +65,8 @@ private slots:
     void on_actionBgColor_triggered();
 
     // 同步行号区域宽度、重绘行号
-    void updateLineNumberAreaWidth(int newBlockCount);
-    void updateLineNumberArea(const QRect &rect, int dy);
+    // void updateLineNumberAreaWidth(int newBlockCount);
+    // void updateLineNumberArea(const QRect &rect, int dy);
 
     void on_actionShowLinenumber_triggered(bool checked);
 
@@ -82,6 +82,7 @@ private slots:
     void doReplaceAll(QString target, QString replaceText, bool caseSensitive);
     void updateStatusBarInfo();
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -94,7 +95,7 @@ private:
     bool isModified;
 
     bool maybeSave();
-    LineNumberArea *m_lineArea;
+    // LineNumberArea *m_lineArea;
 
     QTextCursor m_searchCursor; // 记录查找光标，连续查找用
 };

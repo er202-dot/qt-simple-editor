@@ -3,7 +3,8 @@
 #include "about.h"
 #include "find.h"
 #include "replace.h"
-#include "linenumberarea.h"
+// #include "linenumberarea.h"
+#include "codeeditor.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -66,12 +67,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionUndo->setEnabled(false);
     ui->actionRedo->setEnabled(false);
 
-    // 构造函数内
-    m_lineArea = new LineNumberArea(ui->plainTextEdit);
-    // 绑定信号，滚动、文本变化时刷新行号
-    connect(ui->plainTextEdit, &QPlainTextEdit::blockCountChanged, this, &MainWindow::updateLineNumberAreaWidth);
-    connect(ui->plainTextEdit, &QPlainTextEdit::updateRequest, this, &MainWindow::updateLineNumberArea);
-    updateLineNumberAreaWidth(0);
+    // // 构造函数内
+    // m_lineArea = new LineNumberArea(ui->plainTextEdit);
+    // // 绑定信号，滚动、文本变化时刷新行号
+    // connect(ui->plainTextEdit, &QPlainTextEdit::blockCountChanged, this, &MainWindow::updateLineNumberAreaWidth);
+    // connect(ui->plainTextEdit, &QPlainTextEdit::updateRequest, this, &MainWindow::updateLineNumberArea);
+    // updateLineNumberAreaWidth(0);
 
     ui->actionToolbar->setChecked(true);
     ui->actionStatusbar->setChecked(true);
@@ -358,31 +359,37 @@ void MainWindow::on_actionTextWrap_triggered(bool checked)
         ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
     }
 }
-void MainWindow::updateLineNumberAreaWidth(int /*newBlockCount*/)
-{
-    int w = m_lineArea->areaWidth();
-    m_lineArea->setGeometry(0,0,w, ui->plainTextEdit->viewport()->height());
-}
+// void MainWindow::updateLineNumberAreaWidth(int /*newBlockCount*/)
+// {
+//     int w = m_lineArea->areaWidth();
+//     m_lineArea->setGeometry(0,0,w, ui->plainTextEdit->viewport()->height());
+// }
 
-void MainWindow::updateLineNumberArea(const QRect &rect, int dy)
-{
-    if (dy)
-        m_lineArea->scroll(0, dy);
-    else
-        m_lineArea->update(0, rect.y(), m_lineArea->width(), rect.height());
-}
+// void MainWindow::updateLineNumberArea(const QRect &rect, int dy)
+// {
+//     if (dy)
+//         m_lineArea->scroll(0, dy);
+//     else
+//         m_lineArea->update(0, rect.y(), m_lineArea->width(), rect.height());
+// }
 
 
 void MainWindow::on_actionShowLinenumber_triggered(bool checked)
 {
-    if(checked)
+    // if(checked)
+    // {
+    //     m_lineArea->show();
+    //     updateLineNumberAreaWidth(0);
+    // }
+    // else
+    // {
+    //     m_lineArea->hide();
+    // }
+    // 把plainTextEdit转成CodeEditor*
+    CodeEditor* editor = qobject_cast<CodeEditor*>(ui->plainTextEdit);
+    if(editor)
     {
-        m_lineArea->show();
-        updateLineNumberAreaWidth(0);
-    }
-    else
-    {
-        m_lineArea->hide();
+        editor->setLineNumberVisible(checked);
     }
 }
 
@@ -512,4 +519,7 @@ void MainWindow::updateStatusBarInfo()
     statusLabel.setText(QString("length:%1  lines:%2").arg(len).arg(lineCount));
     statusCursorLabel.setText(QString("Lh:%1  Col:%2").arg(lineNo).arg(colNo));
 }
+
+
+
 
